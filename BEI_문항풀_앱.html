@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEI 주질문 문항 풀</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Serif+Display&display=swap');
+
+  :root {
+    --bg: #f5f3ee;
+    --surface: #ffffff;
+    --surface2: #f0ede6;
+    --accent: #2d5a8e;
+    --accent2: #4a8fd4;
+    --text: #1a1a2e;
+    --text2: #5a5a7a;
+    --border: #ddd9d0;
+    --tag-근로: #e8f0fb;
+    --tag-근로-t: #2d5a8e;
+    --tag-공동: #eaf7f0;
+    --tag-공동-t: #1a7a4a;
+    --tag-자기: #fef3e8;
+    --tag-자기-t: #b05d1a;
+    --tag-의사: #f3e8fe;
+    --tag-의사-t: #6b2da8;
+    --tag-대인: #fde8ec;
+    --tag-대인-t: #a82d4a;
+    --success: #1a7a4a;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--accent);
+    color: white;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 12px rgba(45,90,142,0.2);
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+
+  header .subtitle {
+    font-size: 0.8rem;
+    opacity: 0.75;
+    margin-top: 2px;
+  }
+
+  header .count-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 24px;
+  }
+
+  /* 탭 */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    background: var(--surface2);
+    padding: 4px;
+    border-radius: var(--radius);
+    width: fit-content;
+  }
+  .tab-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: white;
+    color: var(--accent);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  /* 검색 섹션 */
+  .search-section {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+
+  .search-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .search-input-wrap {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+
+  .search-input-wrap input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.9rem;
+    background: var(--bg);
+    color: var(--text);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .search-input-wrap input:focus {
+    border-color: var(--accent2);
+    background: white;
+  }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text2);
+    font-size: 1rem;
+  }
+
+  .filter-select {
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.85rem;
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+    min-width: 130px;
+    transition: border-color 0.2s;
+  }
+  .filter-select:focus { border-color: var(--accent2); }
+
+  .search-btn {
+    padding: 12px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .search-btn:hover { background: #1e3f6e; }
+
+  .search-result-count {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    color: var(--text2);
+  }
+
+  /* 문항 리스트 */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .question-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    border: 1.5px solid transparent;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .question-card:hover {
+    border-color: var(--accent2);
+    box-shadow: 0 4px 14px rgba(74,143,212,0.1);
+    transform: translateY(-1px);
+  }
+  .question-card.selected {
+    border-color: var(--accent);
+    background: #f0f6ff;
+  }
+
+  .q-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .question-card.selected .q-checkbox {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .q-content { flex: 1; }
+
+  .q-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .q-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .q-text mark {
+    background: #fff3b0;
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+
+  .q-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .btn-sm {
+    padding: 6px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: white;
+    color: var(--text2);
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-sm:hover { border-color: var(--accent2); color: var(--accent); }
+  .btn-sm.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn-sm.primary:hover { background: #1e3f6e; }
+
+  /* 변형 섹션 */
+  .transform-section {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+
+  .transform-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .transform-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .selected-q-box {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+
+  .selected-q-label {
+    font-size: 0.75rem;
+    color: var(--text2);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .selected-q-text {
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .transform-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .option-chip {
+    padding: 7px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    background: white;
+    color: var(--text2);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .option-chip.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .option-chip:hover:not(.active) { border-color: var(--accent2); color: var(--accent); }
+
+  .context-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    resize: vertical;
+    min-height: 70px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+  }
+  .context-input:focus { border-color: var(--accent2); background: white; }
+
+  .generate-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .generate-btn:hover { background: #1e3f6e; }
+  .generate-btn:disabled { background: #aaa; cursor: not-allowed; }
+
+  .result-box {
+    margin-top: 18px;
+    background: #f0f6ff;
+    border: 1.5px solid var(--accent2);
+    border-radius: 10px;
+    padding: 18px;
+  }
+
+  .result-label {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .result-item {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    position: relative;
+    line-height: 1.65;
+    font-size: 0.9rem;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .result-item:last-child { margin-bottom: 0; }
+
+  .result-copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    font-size: 0.73rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text2);
+    transition: all 0.15s;
+  }
+  .result-copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .result-copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+  .loading-spinner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text2);
+    font-size: 0.88rem;
+    padding: 12px 0;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2.5px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  /* 문항 풀 탭 */
+  .pool-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 14px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    text-align: center;
+    flex: 1;
+    min-width: 110px;
+  }
+
+  .stat-num { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px;
+    color: var(--text2);
+    font-size: 0.9rem;
+  }
+
+  /* 업로드 영역 */
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+    margin-bottom: 16px;
+  }
+  .upload-area:hover { border-color: var(--accent2); background: #f0f6ff; }
+  .upload-area input { display: none; }
+  .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+  .upload-text { font-size: 0.9rem; color: var(--text2); }
+  .upload-text strong { color: var(--accent); }
+
+  .file-info {
+    background: #eaf7f0;
+    border: 1.5px solid #1a7a4a;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: #1a7a4a;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .add-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--success);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .add-btn:hover { background: #14603b; }
+  .add-btn:disabled { background: #aaa; cursor: not-allowed; }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .page-btn {
+    padding: 7px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 0.83rem;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text2);
+    transition: all 0.15s;
+  }
+  .page-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .page-btn:hover:not(.active):not(:disabled) { border-color: var(--accent2); color: var(--accent); }
+  .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* 컬럼 레이아웃 */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  .sticky-panel {
+    position: sticky;
+    top: 20px;
+  }
+
+  /* 알림 */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--text);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    z-index: 999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>BEI 주질문 문항 풀</h1>
+    <div class="subtitle">역량 기반 구조화 면접 · 문항 검색 & AI 변형</div>
+  </div>
+  <div class="count-badge" id="totalBadge">총 150문항</div>
+</header>
+
+<div class="main">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('search')">🔍 검색 & 변형</button>
+    <button class="tab-btn" onclick="switchTab('pool')">📋 문항 풀 관리</button>
+    <button class="tab-btn" onclick="switchTab('add')">➕ 파일 추가</button>
+  </div>
+
+  <!-- 검색 & 변형 탭 -->
+  <div id="tab-search">
+    <div class="two-col">
+      <!-- 왼쪽: 검색 -->
+      <div>
+        <div class="search-section">
+          <div class="search-row">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="searchInput" placeholder="키워드로 검색 (예: 갈등, 실수, 목표)" 
+                onkeydown="if(event.key==='Enter') doSearch()" oninput="doSearch()">
+            </div>
+            <select class="filter-select" id="filterComp" onchange="doSearch()">
+              <option value="">전체 역량</option>
+              <option value="근로윤리">근로윤리</option>
+              <option value="공동체윤리">공동체윤리</option>
+              <option value="자기개발능력">자기개발능력</option>
+              <option value="의사소통능력">의사소통능력</option>
+              <option value="대인관계능력">대인관계능력</option>
+            </select>
+          </div>
+          <div class="search-result-count" id="resultCount"></div>
+        </div>
+
+        <div class="questions-list" id="questionsList"></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+
+      <!-- 오른쪽: 변형 패널 -->
+      <div class="sticky-panel">
+        <div class="transform-section">
+          <div class="transform-header">
+            <div class="transform-title">✨ AI 변형 생성</div>
+          </div>
+
+          <div id="noSelectionMsg" style="color:var(--text2);font-size:0.88rem;text-align:center;padding:20px 0;">
+            왼쪽 문항을 클릭하면<br>AI 변형을 생성할 수 있어요
+          </div>
+
+          <div id="transformPanel" style="display:none;">
+            <div class="selected-q-box">
+              <div class="selected-q-label">선택된 원본 문항</div>
+              <div class="q-tag" id="selectedTag"></div>
+              <div class="selected-q-text" id="selectedQ"></div>
+            </div>
+
+            <div style="font-size:0.82rem;font-weight:600;color:var(--text2);margin-bottom:8px;">변형 방향</div>
+            <div class="transform-options">
+              <div class="option-chip active" data-val="유사">유사 재표현</div>
+              <div class="option-chip" data-val="구체화">상황 구체화</div>
+              <div class="option-chip" data-val="직무">직무 특화</div>
+              <div class="option-chip" data-val="난이도높임">난이도 높임</div>
+              <div class="option-chip" data-val="부드럽게">표현 부드럽게</div>
+            </div>
+
+            <textarea class="context-input" id="contextInput" 
+              placeholder="추가 맥락 (선택) — 예: '신입 대상', '원자력 직무', '리더십 역량 강조' 등"></textarea>
+
+            <button class="generate-btn" id="generateBtn" onclick="generateVariants()">
+              AI 변형 문항 3개 생성하기
+            </button>
+
+            <div id="transformResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 문항 풀 관리 탭 -->
+  <div id="tab-pool" style="display:none;">
+    <div class="pool-stats" id="poolStats"></div>
+    <div class="search-section" style="margin-bottom:16px;">
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="poolSearchInput" placeholder="문항 검색" oninput="renderPool()">
+        </div>
+        <select class="filter-select" id="poolFilterComp" onchange="renderPool()">
+          <option value="">전체 역량</option>
+          <option value="근로윤리">근로윤리</option>
+          <option value="공동체윤리">공동체윤리</option>
+          <option value="자기개발능력">자기개발능력</option>
+          <option value="의사소통능력">의사소통능력</option>
+          <option value="대인관계능력">대인관계능력</option>
+        </select>
+      </div>
+    </div>
+    <div id="poolList" class="questions-list"></div>
+    <div class="pagination" id="poolPagination"></div>
+  </div>
+
+  <!-- 파일 추가 탭 -->
+  <div id="tab-add" style="display:none;">
+    <div class="search-section">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:16px;">📥 엑셀 파일 추가</h3>
+      <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept=".xlsx,.csv" onchange="handleFileUpload(event)">
+        <div class="upload-icon">📊</div>
+        <div class="upload-text"><strong>클릭하여 파일 선택</strong><br>또는 여기에 파일을 드래그하세요<br><small style="color:#aaa">(.xlsx, .csv 지원)</small></div>
+      </div>
+
+      <div id="fileInfo" style="display:none;"></div>
+      <div id="previewArea"></div>
+
+      <div class="section-divider"></div>
+      <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:12px;">✏️ 직접 문항 추가</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+        <select class="filter-select" id="manualComp" style="flex:1;min-width:140px;">
+          <option value="근로윤리">근로윤리</option>
+          <option value="공동체윤리">공동체윤리</option>
+          <option value="자기개발능력">자기개발능력</option>
+          <option value="의사소통능력">의사소통능력</option>
+          <option value="대인관계능력">대인관계능력</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+      <textarea class="context-input" id="manualQ" placeholder="추가할 주질문을 입력하세요 (한 줄에 하나씩 여러 개 입력 가능)" style="min-height:100px;"></textarea>
+      <button class="add-btn" onclick="addManualQuestions()">문항 추가하기</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========================
+// 데이터
+// ========================
+let questions = [{"역량":"근로윤리","주질문":"조직에서 관행적으로 지켜지지 않던 규정을 지켜 업무를 수행한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"본인의 실수나 잘못을 인지한 상황에서 이를 숨기지 않고 스스로 책임을 지고 바로잡았던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"동료나 주변 사람의 부적절한 행동을 목격했을 때, 이를 묵인하지 않고 대응했던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"상급자나 선배의 요구가 부당하다고 판단되는 상황에서 본인의 원칙을 지키며 대응했던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"본인에게 유리한 방향으로 전달할 수 있는 상황에서도, 객관적인 사실에 기반해 정보를 전달했던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"시간이나 자원이 부족해 절차를 일부 생략하면 더 빠르게 끝낼 수 있는 상황에서도, 정해진 절차 그대로 업무를 수행한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"어렵거나 도움이 필요한 동료·주변 사람을 외면하지 않고, 본인이 시간을 들여 직접 도왔던 경험에 대해 말씀해 주세요."},{"역량":"근로윤리","주질문":"명확한 답이 없는 도덕적 딜레마 상황에서, 양심에 따라 본인의 행동을 결정한 경험에 대해 말씀해 주세요."},{"역량":"근로윤리","주질문":"조직이나 타인에게 영향을 줄 수 있는 상황에서, 신중하게 판단하고 책임 있게 행동했던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"사실대로 보고하거나 행동하면 본인에게 직접적인 손해나 불이익이 예상되는 상황에서도, 정직하게 처리한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"효율적으로 보이는 방법보다, 조직의 기준에 맞는 방식을 선택했던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"본인의 업무 결과나 성과를 더 좋게 보이도록 할 수 있는 상황에서도, 있는 그대로 보고한 경험에 대해 말씀해 주세요."},{"역량":"근로윤리","주질문":"본인의 편의나 효율을 위해 다른 사람의 권리를 가볍게 여길 수 있었던 상황에서도, 그들을 존중하며 본인의 행동을 조정한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"업무 수행 과정에서 신뢰를 잃지 않기 위해 중요하게 생각했던 행동이나 태도를 실천한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"다른 사람이 알기 어렵거나 관심을 두지 않는 작은 약속과 책임을 끝까지 지켜낸 경험에 대해 말씀해 주세요."},{"역량":"근로윤리","주질문":"규정상 문제는 없었지만 스스로 더 엄격한 윤리적 기준으로 판단하고 행동한 경험에 대해 말씀해 주세요."},{"역량":"근로윤리","주질문":"공동작업의 결과 중 본인이 한 부분이 실제보다 크게 비치는 상황에서, 본인의 기여만큼만 정직하게 표현한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"조직 내에서 신뢰를 얻기 위해 꾸준히 지켜왔던 행동이나 태도와, 이를 실제 업무에서 실천했던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"조직의 자원이나 예산을 개인적으로 활용할 수 있는 상황에서도, 이를 절제하고 공적인 용도로만 사용한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"본인이 직접 한 일은 아니지만, 본인이 속한 조직의 잘못이나 결함을 외면하지 않고 대응한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"스스로 정한 원칙이나 기준을 상황에 따라 쉽게 바꾸지 않았던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"비공식적인 방법으로 처리할 수 있는 상황에서도 공식 절차와 기준을 지켜 업무를 진행한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"본인의 평판이나 평가에 부정적인 영향이 예상되는 상황에서도, 사실 그대로 인정하고 행동한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"조직 밖의 사적인 상황에서도 스스로 윤리적 기준을 유지하려 노력했던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"시간이 지나면 잊혀질 수 있는 약속임에도, 끝까지 기억하고 지켜낸 경험에 대해 말씀해 주세요."},{"역량":"근로윤리","주질문":"모두가 당연하게 받아들이던 방식에 의문을 가지고, 더 적절한 방향으로 행동했던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"익명이거나 비대면 상황 등 본인이 누구인지 드러나지 않는 환경에서도, 동일한 윤리적 기준을 지켜 행동한 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"가까운 동료나 후배의 사소한 편의를 봐줄 수 있는 상황에서도, 정해진 기준을 동일하게 적용한 경험에 대해 말씀해 주세요."},{"역량":"근로윤리","주질문":"업무 중 당장의 편의보다 장기적인 관점에서 판단했던 경험을 말씀해 주세요."},{"역량":"근로윤리","주질문":"본인에게 유리한 방향으로 판단할 수 있었던 상황에서도, 조직 구성원 간의 공정성과 형평성을 우선해 대응했던 경험을 말씀해 주세요"},{"역량":"공동체윤리","주질문":"본인의 지식이나 경험을 팀원들과 적극적으로 공유하여 팀 전체의 역량이나 성과를 높였던 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"팀 내 다른 동료들 간의 갈등 상황에서, 직접 당사자가 아님에도 중재자로 나서서 해결한 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"본인의 업무나 결정이 기대한 결과에 미치지 못했을 때, 원인을 분석하고 개선한 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"팀 내에서 소수의 의견이 무시되거나 간과될 위기에 있을 때, 그 의견이 반영되도록 노력한 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"약속한 업무나 마감기한을 지키기 어려운 상황에서 이에 적절히 대응하여 결과를 만들어낸 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"업무 수행 과정에서 결과의 완성도를 높이기 위해 스스로 추가적으로 확인하거나 관리했던 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"결과에 대한 압박이 큰 업무를 끝까지 수행했던 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"협업에 비협조적이거나 거리감을 두던 동료를 함께 일하도록 변화시킨 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"새로 합류한 동료나 팀원이 조직에 적응하기 어려워하는 상황에서, 도움을 주어 함께 일할 수 있도록 만든 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"팀의 사기나 분위기가 가라앉은 상황에서, 본인이 나서서 팀 분위기를 바꾼 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"다른 사람의 도움이 꼭 필요한 일이었지만 부탁이 어려운 상황에서, 다른 방법을 찾아 일을 성공적으로 완수한 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"결과가 좋지 않게 나와 누구도 책임지려 하지 않을 때, 본인이 나서서 정리하고 매듭지은 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"다른 팀과 이해관계가 다른 상황에서, 협력을 이끌어내 공동의 결과를 만든 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"공동 작업 과정에서 팀원들의 강점을 고려해 팀의 성과를 이끈 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"업무 진행 중 본인의 실수나 누락된 부분을 스스로 발견하고, 이를 적극적으로 만회하여 책임을 다한 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"본인이 약속한 결과가 늦어질 가능성이 보일 때, 이를 미리 알리고 후속 조치하여 성공적으로 마무리한 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"다른 사람이 의도적으로 떠넘긴 일이었음에도, 거부하지 않고 본인이 책임지고 처리한 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"구성원들의 의견 차이가 매우 컸던 상황에서, 합의점을 만들어 모두가 동의하는 결정을 내린 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"본인의 일은 아니었지만 도움 요청을 받았을 때, 적극적으로 협력해 함께 결과를 만든 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"후배나 동료가 함께 성장할 수 있도록 본인의 시간을 들여 가르치고 도움을 주어 팀 성과를 향상시킨 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"본인의 업무만 처리하는 데 그치지 않고, 팀 전체 진행 상황까지 함께 살피며 수행했던 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"결과가 좋지 않게 나왔을 때 다른 사람이나 환경 탓으로 돌리지 않고, 본인이 먼저 책임을 인정하고 만회한 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"공동 목표 달성을 위해 개인의 방식보다 팀의 방향을 우선했던 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"강한 개성을 가진 팀원들 사이에서 공통점을 찾아 조화롭게 일하는 분위기를 만든 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"팀원들을 위해 본인이 양보하거나 손해를 감수해 협력의 결과를 이끌어낸 경험에 대해 말씀해 주세요."},{"역량":"공동체윤리","주질문":"업무 수행 중 발생할 수 있는 문제를 미리 인식하고 사전에 대응했던 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"업무를 수행하면서 자신이 한 말이나 행동에 대해 끝까지 책임졌던 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"협업과정에서 자신의 실수나 부족함을 인정하며 갈등을 해결했던 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"갈등이 표면화되기 전 미세한 신호를 감지하고, 미리 조율해 팀워크를 지킨 경험을 말씀해 주세요."},{"역량":"공동체윤리","주질문":"함께 일한 결과의 인정이나 성과를 본인보다 동료에게 먼저 돌려 협력 분위기를 강화한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본인에게 불편한 피드백을 받았을 때 이를 수용하고 실제 행동 변화로 이어갔던 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"익숙하고 잘 해오던 방식에서 스스로 벗어나 새로운 방식을 시도하여 성과를 낸 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본인의 약점이나 부족한 역량을 스스로 인식하고, 이를 체계적으로 노력하여 개선한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"반복적으로 실패했던 일에 대해 포기하지 않고 도전하여 성공한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"결과가 불확실하거나 성공 확률이 낮은 일임에도 도전하여 성과를 낸 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본인의 시간이나 비용을 자발적으로 투자해 업무에 필요한 역량을 꾸준히 개발한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"그동안 잘 알지 못하거나 익숙하지 않았던 새로운 분야의 지식을 자발적으로 학습해 실제 업무나 활동에 적용한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"잘 안 되는 영역을 회피하지 않고 일부러 더 시도해 약점을 보완한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본인이 가진 자원이나 조건이 충분하지 않은 상황에서 무모해 보이는 시도를 해 결과를 낸 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본인의 한계라고 여기던 영역(체력·심리·관계 등)에 도전해 한 단계 넘어선 경험에 대해 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본인의 현재 수준에 안주하지 않고, 더 높은 기준에 도달하기 위해 의도적으로 노력해 성장을 만들어낸 경험에 대해 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본받고 싶은 사람이나 롤모델을 찾아, 그들의 태도와 강점을 배우고 자신의 역량으로 발전시키기 위해 지속적으로 노력한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본인보다 실력이 뛰어난 사람들 사이에서 위축되지 않고 도전해 성과를 낸 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"이미 익숙하게 수행하던 업무나 분야였지만, 기존 방식에 안주하지 않고 새로운 방법으로 도전한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"감당하기 쉽지 않은 역할이나 책임이었음에도, 스스로 도전하여 끝까지 수행했던 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"어떤 업무나 활동이 끝난 후 결과나 과정을 본인이 직접 분석해, 이를 자신의 역량 발전으로 이어간 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"익숙해질 수 있는 반복 업무에서도 현재 수준에 머무르지 않고 지속적으로 발전을 시도했던 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본인의 전공이나 업무와 관련된 분야가 아닌 인접한 분야의 지식까지 학습해 시야와 전문성을 확장한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"거절당하거나 부정적인 평가를 받을 가능성이 컸음에도 시도해보기로 결심하고 도전한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"익숙한 환경이나 안정된 위치를 벗어나 낯선 환경에서 새로운 일에 도전한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"주어진 환경에서 본인이 부족하다고 느낀 부분을 스스로 인식하고, 누가 시키지 않았음에도 채워나간 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"다른 사람보다 뒤처진다고 느꼈던 부분을 꾸준한 노력으로 따라잡았던 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"정기적인 자기 점검·기록·복기 습관을 만들어 꾸준한 성장으로 이어간 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"처음 해보는 일을 짧은 시간 안에 해내야 하는 부담스러운 상황에서, 도전해 결과를 만들어낸 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"이전에는 피하거나 부담스러워하던 상황에 일부러 자신을 노출시키며 적응했던 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"변화하는 환경(기술·트렌드 등)에 맞춰 본인의 역량을 능동적으로 업데이트한 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"단기적으로는 도움이 되지 않아 보였지만 장기적 관점에서 꾸준히 학습해 본인의 역량으로 만든 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"잘하고 있는 분야임에도 더 깊이 이해하거나 전문성을 높이기 위해 추가적으로 노력했던 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"결과보다 '시도 자체의 의미'가 중요하다고 판단해 도전했던 경험을 말씀해 주세요."},{"역량":"자기개발능력","주질문":"본인의 기존 이미지나 역할과 다른 모습을 보여주기 위해 노력했던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"반복되는 문제의 원인을 분석하고 재발 방지를 위해 개선했던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"본인의 의견이나 제안을 다수의 사람 앞에서 성공적으로 전달한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"불명확한 지시나 요구사항을 소통을 통해 명확히 파악하고 실행에 옮긴 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"업무 중 문제가 발생했을 때, 원인을 여러 측면에서 검토하고 확인하여 해결한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"모두가 결과에만 집중하고 있을 때, 본인은 판단 과정의 타당성을 더 중요하게 봤던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"상대방이 듣고 싶어 하지 않는 부정적인 의견을 정확하게 전달해야 하는 상황에서, 오해 없이 메시지를 전한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"상대방의 말을 잘 듣고 핵심을 정리하거나 재확인해, 오해나 누락 없이 업무를 진행한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"상대방이 제대로 이해하지 못하고 있다고 판단해 설명 방식을 바꾸었던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"무엇을 먼저 해야 할지 우선순위가 모호한 상황에서, 본인이 명확한 기준을 도출해 판단을 내린 경험에 대해 말씀해 주세요."},{"역량":"의사소통능력","주질문":"서로 충돌하거나 상반되는 정보 속에서, 본인이 합리적인 결론을 도출한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"전문 지식이 부족한 상대방에게 어려운 내용을 정확하게 이해시켜야 했던 상황에서, 이를 효과적으로 전달한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"비대면 상황에서도 상대방이 오해 없이 의사소통하기 위해 신경 썼던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"복잡하고 양이 많은 정보를 상대방이 이해하기 쉽도록 구조화하여, 명확하게 전달한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"어떤 문제의 원인을 가설로 세우고, 이를 단계적으로 검증해 결론을 도출한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"다른 사람의 주장이 비논리적이라는 것을 발견하고, 논리적인 근거를 들어 상대방을 설득한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"본인과 입장이나 의견이 다른 상대방을 대화를 통해 설득해 합의점을 만든 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"서로 다른 사람들이 각자 다르게 이해하고 있던 내용을 하나의 핵심으로 정리해 전달했던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"결과가 모호한 상황에서 가능한 시나리오를 비교 분석해 합리적인 선택을 한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"표면적인 원인이 아닌 근본적인 원인을 찾아 타당한 결론을 이끌어낸 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"짧은 시간 안에 논리적으로 분석해 타당한 의사결정을 내린 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"예상과 다른 결과나 문제 상황을 상급자에게 신속하고 명확하게 공유했던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"단순히 말하는 것보다 상대방이 실제로 이해했는지 확인하며 소통했던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"전달 과정에서 생길 수 있는 혼선을 줄이기 위해 표현이나 구조를 정리했던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"처음 생각했던 원인이나 가정이 틀렸다는 것을 발견하고 분석 방향을 수정했던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"단편적이고 부분적인 정보만 있는 상황에서, 합리적인 추론으로 타당한 결론을 도출한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"외국인이나 문화·배경이 다른 상대방과 효과적으로 소통해 협업을 이뤄낸 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"자료나 정보의 양이 많아 핵심을 추리기 어려운 상황에서, 핵심만 간추려 정확히 전달한 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"회의에서 의견이 흩어져 결론이 나지 않을 때, 흐름을 정리해 결론으로 이끈 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"복잡한 문제를 해결하기 위해 기준이나 판단 체계를 직접 만들었던 경험을 말씀해 주세요."},{"역량":"의사소통능력","주질문":"직감이나 경험보다 근거와 데이터 중심으로 판단하려 했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"상대방이 요구를 파악하고 기대 이상의 가치를 제공했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"상대방이 명확히 표현하지 않은 필요나 어려움을 먼저 파악하여 대응했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"까다롭거나 어려운 고객의 요구를 이해하고 대응해 만족도를 높였던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"업무 중 문제가 발생했을 때, 원인을 여러 측면에서 검토하고 확인하여 해결한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"주변의 협력과 자원을 활용해 문제를 해결했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"불만이나 항의를 제기한 상대방의 신뢰를 회복하기 위해 본인이 직접 대응한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"조직 구성원의 요구가 본인 업무와 충돌하는 상황에서도, 그들의 요구를 이해하고 적극적으로 대응한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"즉시 대응하지 않으면 상황이 악화될 수 있는 긴급한 상황에서, 빠른 판단력으로 문제를 해결한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"정보나 자원이 충분하지 않은 상황에서, 가능한 범위 안에서 합리적인 방법을 찾아 문제를 해결한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"문제 해결 과정에서 핵심 변수와 그렇지 않은 요소를 구분해 판단했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"시간이나 자원이 충분하지 않은 상황에서도 상대의 요구를 외면하지 않고 만족도를 높여낸 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"기존의 방식으로는 상대의 요구를 충분히 충족시키기 어려운 상황에서, 새로운 접근으로 만족도를 높인 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"임시적인 대응만으로 마무리할 수 있었던 문제임에도, 근본 원인까지 파고들어 문제를 해결한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"처음 보는 유형의 문제를 본인이 직접 정의하고, 해결 방법을 만들어 적용한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"충분한 정보가 없는 상황에서도, 여러 가능성을 고려해 합리적으로 판단하고 결과를 만들어낸 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"상대방의 의견이나 요구를 단순히 들어주는 데서 그치지 않고, 조직의 방식이나 절차의 변화까지 이끌어낸 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"고객의 요구가 서로 모순되거나 충돌하는 상황에서, 우선순위를 조율해 만족도를 높인 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"업무 수행 과정에서 예상하지 못한 요청이나 상황 변화에 대응했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"작은 단위에서 해결책을 검증한 뒤 단계적으로 확장해 더 큰 문제까지 해결한 경험에 대해 말씀해 주세요."},{"역량":"대인관계능력","주질문":"문제 상황에서 시간, 비용, 효율 등을 함께 고려해 가장 적절한 해결방안을 선택했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"고객의 요구가 본인의 판단과 달랐음에도, 고객 관점을 우선해 대응한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"고객의 단발적인 만족이 아닌 고객과의 장기적인 신뢰 관계를 만들기 위해 의도적으로 노력한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"응대 후의 후속 점검이나 사후 관리를 통해 상대의 만족도를 한층 더 높인 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"업무 흐름에 영향을 주는 문제를 발견하고 대응했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"현재 발생한 문제보다 이후 확산 가능성을 더 중요하게 보고 대응했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"분노하거나 감정이 격해진 상대방을 차분히 응대해 만족도를 회복시킨 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"연령·문화·성향 등 배경이 매우 다양한 상대방의 요구에 응대하여 만족감을 준 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"본인의 휴식이나 편의를 일부 포기하면서까지 상대의 요구에 충실히 대응한 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"하나의 문제를 해결하던 중 연결된 다른 문제까지 발견해, 전체 과정을 함께 개선했던 경험을 말씀해 주세요."},{"역량":"대인관계능력","주질문":"실제 업무 환경이나 구성원의 상황을 고려해 해결방안을 수정했던 경험을 말씀해 주세요."}];
+
+const tagColors = {
+  '근로윤리': ['var(--tag-근로)', 'var(--tag-근로-t)'],
+  '공동체윤리': ['var(--tag-공동)', 'var(--tag-공동-t)'],
+  '자기개발능력': ['var(--tag-자기)', 'var(--tag-자기-t)'],
+  '의사소통능력': ['var(--tag-의사)', 'var(--tag-의사-t)'],
+  '대인관계능력': ['var(--tag-대인)', 'var(--tag-대인-t)'],
+};
+
+let selectedQuestion = null;
+let selectedTransformType = '유사';
+let currentPage = 1;
+let poolPage = 1;
+const PAGE_SIZE = 10;
+
+// ========================
+// 탭 전환
+// ========================
+function switchTab(tab) {
+  ['search', 'pool', 'add'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', ['search','pool','add'][i] === tab);
+  });
+  if (tab === 'pool') renderPool();
+  if (tab === 'search') doSearch();
+  updateBadge();
+}
+
+// ========================
+// 검색
+// ========================
+function getFiltered() {
+  const kw = document.getElementById('searchInput').value.trim().toLowerCase();
+  const comp = document.getElementById('filterComp').value;
+  return questions.filter(q => {
+    const matchComp = !comp || q.역량 === comp;
+    const matchKw = !kw || q.주질문.toLowerCase().includes(kw) || q.역량.includes(kw);
+    return matchComp && matchKw;
+  });
+}
+
+function doSearch() {
+  currentPage = 1;
+  renderQuestions();
+}
+
+function highlight(text, kw) {
+  if (!kw) return text;
+  const re = new RegExp(`(${kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+function renderQuestions() {
+  const filtered = getFiltered();
+  const kw = document.getElementById('searchInput').value.trim().toLowerCase();
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = 1;
+  const slice = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  document.getElementById('resultCount').textContent = `${total}개 문항 검색됨`;
+
+  const list = document.getElementById('questionsList');
+  list.innerHTML = '';
+
+  if (slice.length === 0) {
+    list.innerHTML = '<div class="empty-state">검색 결과가 없습니다.</div>';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  slice.forEach((q, idx) => {
+    const globalIdx = questions.indexOf(q);
+    const isSelected = selectedQuestion === q;
+    const [bg, color] = tagColors[q.역량] || ['#eee', '#666'];
+    const card = document.createElement('div');
+    card.className = 'question-card' + (isSelected ? ' selected' : '');
+    card.innerHTML = `
+      <div class="q-checkbox">${isSelected ? '✓' : ''}</div>
+      <div class="q-content">
+        <div class="q-tag" style="background:${bg};color:${color}">${q.역량}</div>
+        <div class="q-text">${highlight(q.주질문, kw)}</div>
+      </div>
+      <div class="q-actions">
+        <button class="btn-sm" onclick="copyText('${q.주질문.replace(/'/g,"\\'")}', this)">복사</button>
+      </div>
+    `;
+    card.onclick = (e) => {
+      if (e.target.classList.contains('btn-sm')) return;
+      selectQuestion(q);
+    };
+    list.appendChild(card);
+  });
+
+  renderPagination(totalPages, 'pagination', (p) => { currentPage = p; renderQuestions(); });
+}
+
+function renderPagination(totalPages, id, cb) {
+  const pg = document.getElementById(id);
+  pg.innerHTML = '';
+  if (totalPages <= 1) return;
+
+  const page = id === 'pagination' ? currentPage : poolPage;
+
+  const prev = document.createElement('button');
+  prev.className = 'page-btn';
+  prev.textContent = '‹';
+  prev.disabled = page === 1;
+  prev.onclick = () => cb(page - 1);
+  pg.appendChild(prev);
+
+  for (let i = 1; i <= totalPages; i++) {
+    if (i > 5 && i < totalPages - 1) {
+      if (i === 6) { const sp = document.createElement('span'); sp.textContent = '…'; sp.style.padding = '0 4px'; pg.appendChild(sp); }
+      continue;
+    }
+    const btn = document.createElement('button');
+    btn.className = 'page-btn' + (i === page ? ' active' : '');
+    btn.textContent = i;
+    btn.onclick = () => cb(i);
+    pg.appendChild(btn);
+  }
+
+  const next = document.createElement('button');
+  next.className = 'page-btn';
+  next.textContent = '›';
+  next.disabled = page === totalPages;
+  next.onclick = () => cb(page + 1);
+  pg.appendChild(next);
+}
+
+// ========================
+// 선택 & 변형
+// ========================
+function selectQuestion(q) {
+  selectedQuestion = q;
+  renderQuestions();
+
+  const [bg, color] = tagColors[q.역량] || ['#eee','#666'];
+  document.getElementById('selectedTag').textContent = q.역량;
+  document.getElementById('selectedTag').style.cssText = `background:${bg};color:${color};display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:500;margin-bottom:6px;`;
+  document.getElementById('selectedQ').textContent = q.주질문;
+  document.getElementById('noSelectionMsg').style.display = 'none';
+  document.getElementById('transformPanel').style.display = 'block';
+  document.getElementById('transformResult').innerHTML = '';
+}
+
+document.querySelectorAll('.option-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    document.querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    selectedTransformType = this.dataset.val;
+  });
+});
+
+async function generateVariants() {
+  if (!selectedQuestion) return;
+  const btn = document.getElementById('generateBtn');
+  const resultBox = document.getElementById('transformResult');
+  btn.disabled = true;
+
+  resultBox.innerHTML = '<div class="loading-spinner"><div class="spinner"></div> AI가 변형 문항을 생성 중입니다...</div>';
+
+  const context = document.getElementById('contextInput').value.trim();
+  const typeMap = {
+    '유사': '동일한 의도를 유지하면서 표현만 다르게',
+    '구체화': '상황과 맥락을 더 구체적으로 묘사하는 방향으로',
+    '직무': context ? `"${context}" 직무·상황에 맞게 특화하여` : '특정 직무나 상황에 특화하는 방향으로',
+    '난이도높임': '더 까다롭고 심층적인 경험을 끌어낼 수 있도록 난이도를 높여',
+    '부드럽게': '지원자가 부담을 덜 느낄 수 있도록 표현을 더 부드럽고 자연스럽게',
+  };
+
+  const prompt = `당신은 BEI(역량기반 구조화면접) 전문가입니다.
+
+아래 원본 주질문을 참고하여, ${typeMap[selectedTransformType]} 변형한 주질문 3개를 생성해주세요.
+${context ? `추가 맥락: ${context}` : ''}
+
+역량: ${selectedQuestion.역량}
+원본 주질문: ${selectedQuestion.주질문}
+
+규칙:
+- 각 변형 문항은 반드시 "~경험을 말씀해 주세요." 형식으로 끝낼 것
+- STAR(상황-과업-행동-결과) 구조의 답변을 이끌어낼 수 있는 질문이어야 함
+- 원본과 의미가 겹치지 않도록 차별화할 것
+- JSON 형식으로만 응답: {"variants": ["문항1", "문항2", "문항3"]}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content?.map(c => c.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    const variants = parsed.variants || [];
+
+    resultBox.innerHTML = `
+      <div class="result-box">
+        <div class="result-label">✨ AI 변형 결과 (${selectedTransformType})</div>
+        ${variants.map((v, i) => `
+          <div class="result-item">
+            <button class="result-copy-btn" onclick="copyText('${v.replace(/'/g,"\\'")}', this)">복사</button>
+            <strong style="color:var(--text2);font-size:0.78rem;display:block;margin-bottom:4px;">변형 ${i+1}</strong>
+            ${v}
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch(e) {
+    resultBox.innerHTML = `<div style="color:red;font-size:0.85rem;padding:12px 0;">오류가 발생했습니다. 다시 시도해주세요.</div>`;
+  }
+
+  btn.disabled = false;
+}
+
+// ========================
+// 문항 풀 관리
+// ========================
+function renderPool() {
+  const kw = (document.getElementById('poolSearchInput')?.value || '').toLowerCase();
+  const comp = document.getElementById('poolFilterComp')?.value || '';
+  const filtered = questions.filter(q => {
+    return (!comp || q.역량 === comp) && (!kw || q.주질문.toLowerCase().includes(kw) || q.역량.includes(kw));
+  });
+
+  // 통계
+  const stats = document.getElementById('poolStats');
+  const groups = {};
+  questions.forEach(q => { groups[q.역량] = (groups[q.역량] || 0) + 1; });
+  stats.innerHTML = `
+    <div class="stat-card"><div class="stat-num">${questions.length}</div><div class="stat-label">전체 문항</div></div>
+    ${Object.entries(groups).map(([k,v]) => `<div class="stat-card"><div class="stat-num">${v}</div><div class="stat-label">${k}</div></div>`).join('')}
+  `;
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  if (poolPage > totalPages) poolPage = 1;
+  const slice = filtered.slice((poolPage - 1) * PAGE_SIZE, poolPage * PAGE_SIZE);
+
+  const list = document.getElementById('poolList');
+  list.innerHTML = '';
+
+  slice.forEach(q => {
+    const [bg, color] = tagColors[q.역량] || ['#eee','#666'];
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.style.cursor = 'default';
+    card.innerHTML = `
+      <div class="q-content">
+        <div class="q-tag" style="background:${bg};color:${color}">${q.역량}</div>
+        <div class="q-text">${q.주질문}</div>
+      </div>
+      <div class="q-actions">
+        <button class="btn-sm" onclick="copyText('${q.주질문.replace(/'/g,"\\'")}', this)">복사</button>
+        <button class="btn-sm" style="color:#c00;border-color:#fcc;" onclick="deleteQ(this, '${q.주질문.replace(/'/g,"\\'")}')">삭제</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  renderPagination(totalPages, 'poolPagination', (p) => { poolPage = p; renderPool(); });
+}
+
+function deleteQ(btn, text) {
+  const idx = questions.findIndex(q => q.주질문 === text);
+  if (idx > -1) {
+    questions.splice(idx, 1);
+    showToast('문항이 삭제되었습니다.');
+    renderPool();
+    updateBadge();
+  }
+}
+
+// ========================
+// 파일 추가
+// ========================
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  document.getElementById('fileInfo').style.display = 'flex';
+  document.getElementById('fileInfo').innerHTML = `✅ <strong>${file.name}</strong> 선택됨 — CSV/XLSX 파일은 직접 추가 기능을 이용해 주세요.`;
+  document.getElementById('previewArea').innerHTML = `
+    <div style="background:#fff3cd;border:1.5px solid #ffc107;border-radius:10px;padding:14px;font-size:0.85rem;color:#856404;margin-top:8px;">
+      💡 <strong>파일 파싱 안내:</strong> 엑셀 파일을 직접 파싱하려면 파일을 CSV로 저장 후 아래 직접 추가 기능을 사용하거나, Claude 채팅에 파일을 업로드해 문항을 추출해드릴 수 있어요.
+    </div>
+  `;
+}
+
+function addManualQuestions() {
+  const comp = document.getElementById('manualComp').value;
+  const text = document.getElementById('manualQ').value.trim();
+  if (!text) return;
+
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  let added = 0;
+  lines.forEach(l => {
+    // 번호 제거
+    const clean = l.replace(/^\d+[\)\.]\s*/, '').trim();
+    if (clean) {
+      questions.push({ 역량: comp, 주질문: clean });
+      added++;
+    }
+  });
+
+  document.getElementById('manualQ').value = '';
+  showToast(`${added}개 문항이 추가되었습니다!`);
+  updateBadge();
+}
+
+// ========================
+// 유틸
+// ========================
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function updateBadge() {
+  document.getElementById('totalBadge').textContent = `총 ${questions.length}문항`;
+}
+
+// ========================
+// 초기화
+// ========================
+doSearch();
+</script>
+</body>
+</html>
